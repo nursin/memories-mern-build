@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useStyles from './styles';
 import { TextField, Button, Typography, Paper } from '@mui/material';
 import FileBase from 'react-file-base64';
 import { useDispatch } from 'react-redux';
-import { createPost } from '../../actions/posts';
+import { createPost, updatePost } from '../../actions/posts';
+import { useSelector } from 'react-redux';
 
-function Form() {
+// get the current id of the post we are on
+
+function Form({currentId, setCurrentId}) {
     const classes = useStyles();
     const [postData, setPostData] = useState({ creator: '', title: '', message: '', tags: '', selectedFile: '' });
     const dispatch = useDispatch();
+    const post = useSelector((state) => currentId ? state.posts.find((p) => p._id === currentId) : null);
+
+
+    useEffect(() => {
+        if (post) setPostData(post);
+    }, [post]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(createPost(postData));
+
+        if (currentId) {
+            dispatch(updatePost(currentId, postData));
+        } else {
+            dispatch(createPost(postData));
+        }
     }
 
     const clear = () => {

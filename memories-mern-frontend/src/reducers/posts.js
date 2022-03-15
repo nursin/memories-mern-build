@@ -1,4 +1,4 @@
-
+import Posts from "../components/Posts/Posts";
 
 export default (posts = [], action) => {
     switch (action.type) {
@@ -8,6 +8,10 @@ export default (posts = [], action) => {
 
         case 'CREATE':
             return [...posts, action.payload];
+            break;
+
+        case 'UPDATE':
+            return posts.map((post) => post._id === action.payload._id ? action.payload : post);
             break;
 
         default:
