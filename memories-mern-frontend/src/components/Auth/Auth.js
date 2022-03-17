@@ -24,7 +24,7 @@ function Auth() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        console.log(formData)
+        console.log(initialState)
 
         if (isSignup) {
             dispatch(signup(formData, history));
@@ -33,13 +33,11 @@ function Auth() {
         }
     };
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const switchMode = () => {
         setIsSignup((prevIsSignup) => !prevIsSignup);
-        handleShowPassword(false);
+        setShowPassword(false);
     };
 
     const googleSuccess = async (res) => {
@@ -71,8 +69,8 @@ function Auth() {
                         {
                             isSignup && (
                                 <>
-                                    <Input name="firstName" label="First Name" onChange={handleChange} autofocus half />
-                                    <Input name="lastName" label="Last Name" onChange={handleChange} half />
+                                    <Input name="firstName" label="First Name" handleChange={handleChange} autofocus half />
+                                    <Input name="lastName" label="Last Name" handleChange={handleChange} half />
                                 </>
                             )
                         }

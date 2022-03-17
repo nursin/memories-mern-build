@@ -32,15 +32,16 @@ export const signin = async (req, res) => {
 export const signup = async (req, res) => {
     const { email, password, confirmedPassword, firstName, lastName } = req.body;
 
+
     try {
         // check if existing user in db
         const existingUser = await User.findOne({ email });
 
         // found match return error saying user already exist
         if (existingUser) return res.status(400).json({message: "User already exist."});
-
+    console.log('hi')
         // if password does not match the confirm password return error no match
-        if(password !== confirmedPassword) return res.status(400).json({ message: "Passwords dont match."});
+        // if(password !== confirmedPassword) return res.status(400).json({ message: "Passwords dont match."});
 
         // hash and salt password. bcrypt.hash does the hashing second argument is for salt difficulty 12 is common
         const hashedPassword = await bcrypt.hash(password, 12)
