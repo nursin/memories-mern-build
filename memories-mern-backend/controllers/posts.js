@@ -10,12 +10,25 @@ export const getPosts = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
+// Query => /posts?page=1 => page = 1
+// params => /posts/123 => :id = 123
+
+export const getPostsBySearch = async (req, res) => {
+    const { searchQuery, tags } = req.query;
+    try {
+        const title = new RegExp(searchQuery, 'i'); // 'i' ignore case
+        const posts = await PostMessage.find({ $or: [{ title }, { tags: { $in: tags.split(',') } }] });
+        res.json({ data: posts });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
 
 export const createPost = async (req, res) => {
     const post = req.body;
 
     console.log(req.userId)
-    const newPost = new PostMessage({...post, creator: req.userId, createdAt: new Date().toISOString()});
+    const newPost = new PostMessage({ ...post, creator: req.userId, createdAt: new Date().toISOString() });
 
     try {
         await newPost.save();
@@ -51,7 +64,7 @@ export const likePost = async (req, res) => {
     const { id: _id } = req.params;
 
     // check if user is verified
-    if (!req.userId) return res.json({message: 'Unauthorized'});
+    if (!req.userId) return res.json({ message: 'Unauthorized' });
 
     if (!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('No post with that id');
 

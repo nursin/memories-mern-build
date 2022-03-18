@@ -38,6 +38,7 @@ function Home() {
         if (search.trim()) {
             // dispatch fetch search post
             dispatch(getPostsBySearch({search, tags: tags.join(',')}));
+            history(`/posts/search?searchQuery=${search || 'none'}&tags=${tags.join(',')}`);
         } else {
             history('/')
         }
